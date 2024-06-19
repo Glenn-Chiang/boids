@@ -1,4 +1,5 @@
 import { Application, Container, Graphics, PointData, Triangle } from "pixi.js";
+import { Boid } from "./boid";
 
 (async () => {
   const app = new Application();
@@ -15,35 +16,15 @@ import { Application, Container, Graphics, PointData, Triangle } from "pixi.js";
     .fill("#5DADE2");
   container.addChild(background);
 
-  const boidSprite = createBoid({
+  const boid = new Boid({
     x: containerWidth / 2,
     y: containerHeight / 2,
   });
-  container.addChild(boidSprite);
+  boid.spawn(container);
+
+  app.ticker.add((ticker) => {
+
+  })
 })();
 
-// Creates a boid sprite with its tip at the given tipPoint
-function createBoid(tipPoint: PointData) {
-  const boidWidth = 16;
-  const boidHeight = 20;
 
-  const vertices: PointData[] = [
-    { x: tipPoint.x - boidWidth / 2, y: tipPoint.y + boidHeight },
-    { x: tipPoint.x, y: tipPoint.y },
-    { x: tipPoint.x + boidWidth / 2, y: tipPoint.y + boidHeight },
-  ];
-
-  const boidSprite = new Graphics().poly(vertices).fill("white");
-
-  const boidArea = new Triangle(
-    vertices[0].x,
-    vertices[0].y,
-    vertices[1].x,
-    vertices[1].y,
-    vertices[2].x,
-    vertices[2].y
-  );
-  boidSprite.hitArea = boidArea;
-
-  return boidSprite;
-}
