@@ -22,9 +22,12 @@ import { Boid } from "./boid";
   });
   boid.spawn(container);
 
+  const centreDot = new Graphics()
+    .circle(containerWidth / 2, containerHeight / 2, 4)
+    .fill("red");
+  container.addChild(centreDot);
+
   app.ticker.add((ticker) => {
-
-  })
+    boid.move(ticker.deltaTime);
+  });
 })();
-
-
