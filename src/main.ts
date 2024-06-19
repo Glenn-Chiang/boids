@@ -2,8 +2,7 @@ import {
   Application,
   Container,
   Graphics,
-  PointData,
-  Rectangle,
+  Rectangle
 } from "pixi.js";
 import { Boid } from "./boid";
 
@@ -24,11 +23,13 @@ app.stage.addChild(container);
 const background = new Graphics()
   .rect(0, 0, containerWidth, containerHeight)
   .fill("#5DADE2");
+// container.mask = background
 container.addChild(background);
 
 // Array containing all boids spawned
 const boids: Boid[] = [];
 
+// User can spawn new boids by clicking anywhere on the container
 container.eventMode = 'static'
 container.on('pointerdown', (event) => {
   const clickedPos = event.global
