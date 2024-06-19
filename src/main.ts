@@ -20,30 +20,35 @@ const containerBounds = new Rectangle(0, 0, containerWidth, containerHeight);
 container.boundsArea = containerBounds;
 app.stage.addChild(container);
 
+// Background graphic for the container
 const background = new Graphics()
   .rect(0, 0, containerWidth, containerHeight)
   .fill("#5DADE2");
 container.addChild(background);
 
-const boid = new Boid({
-  x: containerWidth / 2,
-  y: containerHeight / 2,
-});
-boid.spawn(container);
+// Array containing all boids spawned
+const boids: Boid[] = [];
 
-const centreDot = new Graphics()
-  .circle(containerWidth / 2, containerHeight / 2, 4)
-  .fill("red");
-container.addChild(centreDot);
+container.eventMode = 'static'
+container.on('pointerdown', (event) => {
+  const clickedPos = event.global
+  const boid = new Boid(clickedPos)
+  boid.spawn(container)
+  boids.push(boid)
+})
+
 
 app.ticker.add((ticker) => {
-  boid.move(ticker.deltaTime);
-
-  // If the boid moves beyond the container boundaries, teleport it to the other side of the container
-  if (!container.getBounds().containsPoint(boid.position.x, boid.position.y)) {
-    boid.setPosition({
-      x: container.getBounds().width - boid.position.x,
-      y: container.getBounds().height - boid.position.y,
-    });
+  // Iterate over every boid and update their movement
+  for (const boid of boids) {
+    boid.move(ticker.deltaTime);
+  
+    // If the boid moves beyond the container boundaries, teleport it to the other side of the container
+    if (!container.getBounds().containsPoint(boid.position.x, boid.position.y)) {
+      boid.setPosition({
+        x: container.getBounds().width - boid.position.x,
+        y: container.getBounds().height - boid.position.y,
+      });
+    }
   }
 });
