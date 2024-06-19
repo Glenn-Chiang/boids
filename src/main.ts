@@ -27,15 +27,22 @@ function createBoid(tipPoint: PointData) {
   const boidWidth = 16;
   const boidHeight = 20;
 
-  const boidSprite = new Graphics()
-    .poly([
-      { x: tipPoint.x - boidWidth / 2, y: tipPoint.y + boidHeight },
-      { x: tipPoint.x, y: tipPoint.y },
-      { x: tipPoint.x + boidWidth / 2, y: tipPoint.y + boidHeight },
-    ])
-    .fill("white");
+  const vertices: PointData[] = [
+    { x: tipPoint.x - boidWidth / 2, y: tipPoint.y + boidHeight },
+    { x: tipPoint.x, y: tipPoint.y },
+    { x: tipPoint.x + boidWidth / 2, y: tipPoint.y + boidHeight },
+  ];
 
-  const boidArea = new Triangle(0, 0, 10, 10, 20, 0);
+  const boidSprite = new Graphics().poly(vertices).fill("white");
+
+  const boidArea = new Triangle(
+    vertices[0].x,
+    vertices[0].y,
+    vertices[1].x,
+    vertices[1].y,
+    vertices[2].x,
+    vertices[2].y
+  );
   boidSprite.hitArea = boidArea;
 
   return boidSprite;
