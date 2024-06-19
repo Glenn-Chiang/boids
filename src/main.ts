@@ -23,7 +23,7 @@ app.stage.addChild(container);
 const background = new Graphics()
   .rect(0, 0, containerWidth, containerHeight)
   .fill("#5DADE2");
-// container.mask = background
+// container.mask = background WHY THE FUCK DOESNT THIS WORK???????????
 container.addChild(background);
 
 // Array containing all boids spawned

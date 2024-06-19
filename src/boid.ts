@@ -3,6 +3,7 @@ import {
   Container,
   Graphics,
   PointData,
+  RAD_TO_DEG,
   Triangle
 } from "pixi.js";
 
@@ -16,7 +17,7 @@ export class Boid {
   private readonly sprite: Graphics;
 
   private readonly speed = 2
-  private direction: Vector = { x: 1, y: -1 };
+  private direction: Vector = { x: -1, y: 1 };
   private get velocity(): Vector {
     return {x: this.direction.x * this.speed, y: this.direction.y * this.speed}
   }
@@ -84,7 +85,7 @@ export class Boid {
   move(deltaTime: number) {
     this.container.x += this.velocity.x * deltaTime;
     this.container.y += this.velocity.y * deltaTime;
-    this.container.rotation = -Math.atan2(this.velocity.y, this.velocity.x);
+    this.container.angle = Math.atan2(this.velocity.y, this.velocity.x) * RAD_TO_DEG + 90;
     // Update viewField position to follow container
     this.viewField.x = this.container.x
     this.viewField.y = this.container.y
