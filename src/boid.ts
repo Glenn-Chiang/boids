@@ -6,24 +6,14 @@ import {
   RAD_TO_DEG,
   Triangle,
 } from "pixi.js";
-
-interface Vector {
-  x: number;
-  y: number;
-}
+import { Vector } from "./vector";
+import { getRandomNumber } from "./random";
 
 export class Boid {
   private readonly container: Container;
   private readonly sprite: Graphics;
 
-  private readonly speed = 2;
-  private direction: Vector = { x: -1, y: 1 };
-  private get velocity(): Vector {
-    return {
-      x: this.direction.x * this.speed,
-      y: this.direction.y * this.speed,
-    };
-  }
+  private velocity: Vector;
 
   private readonly viewRadius = 120;
   // Area in which the boid is aware of other boids
@@ -44,9 +34,13 @@ export class Boid {
     // Graphic representation of the viewField
     const viewFieldGraphic = new Graphics()
       .circle(0, 0, this.viewRadius)
-      .stroke({color: "#85C1E9"});
+      .stroke({ color: "#85C1E9" });
     // Render viewField graphic behind boid sprite
     this.container.addChildAt(viewFieldGraphic, 0);
+
+    const randomX = getRandomNumber(0, 1) * (Math.random() < 0.5 ? 1 : - 1)
+    const randomY = getRandomNumber(0, 1) * (Math.random() < 0.5 ? 1 : - 1)
+    this.velocity = new Vector(randomX, randomY)
   }
 
   // Creates the boid sprite triangle centred in the container
@@ -95,24 +89,34 @@ export class Boid {
   // Called every frame
   update(boids: Boid[], deltaTime: number) {
     // Get neighboring boids within this boid's view field
-    const neighbors = boids.filter((boid) =>
-      boid != this && this.viewField.contains(boid.position.x, boid.position.y)
+    const neighbors = boids.filter(
+      (boid) =>
+        boid != this &&
+        this.viewField.contains(boid.position.x, boid.position.y)
     );
     if (neighbors.length > 0) {
-      console.log('hello boid')
+      console.log("hello boid");
     }
 
-    this.separate(neighbors);
     this.align(neighbors);
     this.cohere(neighbors);
+    this.separate(neighbors);
     this.move(deltaTime);
   }
 
-  private separate(neighbors: Boid[]) {}
-
-  private align(neighbors: Boid[]) {}
+  private align(neighbors: Boid[]) {
+    // Find average velocity of neigbors
+    const velocitySum = neighbors.reduce(
+      (sum, neighbor) => sum.add(neighbor.velocity),
+      new Vector(0, 0)
+    );
+    const averageVelocity = velocitySum.scale(1 / neighbors.length);
+    this.velocity = neighbors.length > 0 ? averageVelocity : this.velocity;
+  }
 
   private cohere(neighbors: Boid[]) {}
+
+  private separate(neighbors: Boid[]) {}
 
   // Move the boid to its desired position in the next frame based on its velocity
   // Rotate the boid toward its direction of movement
