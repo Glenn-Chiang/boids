@@ -25,7 +25,7 @@ export class Boid {
     };
   }
 
-  private readonly viewRadius = 40;
+  private readonly viewRadius = 120;
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
 
@@ -44,7 +44,7 @@ export class Boid {
     // Graphic representation of the viewField
     const viewFieldGraphic = new Graphics()
       .circle(0, 0, this.viewRadius)
-      .fill("#85C1E9");
+      .stroke({color: "#85C1E9"});
     // Render viewField graphic behind boid sprite
     this.container.addChildAt(viewFieldGraphic, 0);
   }
@@ -93,10 +93,26 @@ export class Boid {
   }
 
   // Called every frame
-  update(deltaTime: number) {
+  update(boids: Boid[], deltaTime: number) {
+    // Get neighboring boids within this boid's view field
+    const neighbors = boids.filter((boid) =>
+      boid != this && this.viewField.contains(boid.position.x, boid.position.y)
+    );
+    if (neighbors.length > 0) {
+      console.log('hello boid')
+    }
 
+    this.separate(neighbors);
+    this.align(neighbors);
+    this.cohere(neighbors);
     this.move(deltaTime);
   }
+
+  private separate(neighbors: Boid[]) {}
+
+  private align(neighbors: Boid[]) {}
+
+  private cohere(neighbors: Boid[]) {}
 
   // Move the boid to its desired position in the next frame based on its velocity
   // Rotate the boid toward its direction of movement

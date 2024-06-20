@@ -40,7 +40,7 @@ container.on("pointerdown", (event) => {
 app.ticker.add((ticker) => {
   // Iterate over every boid and update their movement
   for (const boid of boids) {
-    boid.update(ticker.deltaTime);
+    boid.update(boids, ticker.deltaTime);
 
     // If the boid moves beyond the container boundaries, teleport it to the other side of the container
     if (
