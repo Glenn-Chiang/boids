@@ -27,6 +27,11 @@ export class Vector {
     return this.scale(1 / this.magnitude)
   }
 
+  static getAverage(vectors: Vector[]): Vector {
+    const sum: Vector = vectors.reduce((sum, vector) => sum.add(vector), new Vector(0, 0))
+    return sum.scale(1 / vectors.length)
+  }
+
   // Return a vector with random direction and given magnitude
   static randomVector(magnitude: number): Vector {
     const x = Math.random() * (Math.random() < 0.5 ? 1 : -1)
