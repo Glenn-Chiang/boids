@@ -18,7 +18,7 @@ export class Boid {
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
 
-  private initialSpeed = 4;
+  private speed = 4;
 
   constructor(startPos: PointData) {
     this.container = new Container();
@@ -40,7 +40,7 @@ export class Boid {
     this.container.addChildAt(viewFieldGraphic, 0);
 
     // Set initial velocity with a random direction
-    this.velocity = Vector.randomVector(this.initialSpeed)
+    this.velocity = Vector.randomVector(this.speed)
   }
 
   // Creates the boid sprite triangle centred in the container
@@ -104,17 +104,21 @@ export class Boid {
     this.move(deltaTime);
   }
 
+  // Adjust velocity to match average velocity of neighbors including self
   private align(neighbors: Boid[]) {
-    // Find average velocity of self and neighbors
     const velocitySum = this.velocity.add(neighbors.reduce(
       (sum, neighbor) => sum.add(neighbor.velocity),
       new Vector(0, 0)
     ));
     const averageVelocity = velocitySum.scale(1 / (neighbors.length + 1));
-    this.velocity = neighbors.length > 0 ? averageVelocity : this.velocity;
+    // Normalize to maintain same speed (TODO: Is this actually what we want?)
+    this.velocity = averageVelocity.normalized().scale(this.speed)
   }
 
-  private cohere(neighbors: Boid[]) {}
+  // Adjust velocity to steer toward center of mass
+  private cohere(neighbors: Boid[]) {
+
+  }
 
   private separate(neighbors: Boid[]) {}
 
