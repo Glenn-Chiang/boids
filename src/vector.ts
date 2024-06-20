@@ -1,3 +1,5 @@
+import { PointData } from "pixi.js";
+
 export class Vector {
   public x: number
   public y: number
@@ -37,5 +39,14 @@ export class Vector {
     const x = Math.random() * (Math.random() < 0.5 ? 1 : -1)
     const y = Math.random() * (Math.random() < 0.5 ? 1 : - 1)
     return new Vector(x, y).normalized().scale(magnitude)
+  }
+
+  // Convert point to vector
+  static fromPoint(point: PointData): Vector {
+    return new Vector(point.x, point.y)
+  }
+
+  static getDistance(pointA: PointData, pointB: PointData): number {
+    return Vector.fromPoint(pointA).subtract(Vector.fromPoint(pointB)).magnitude
   }
 }

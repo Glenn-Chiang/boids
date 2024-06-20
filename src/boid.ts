@@ -2,6 +2,7 @@ import {
   Circle,
   Container,
   Graphics,
+  Point,
   PointData,
   RAD_TO_DEG,
   Triangle,
@@ -19,6 +20,10 @@ export class Boid {
   private readonly viewField: Circle;
 
   private speed = 4;
+
+  // Minimum distance between one boid and another.
+  // If a neighboring boid is within this distance, this boid will move away from that neighbor.
+  private minDistance = 20;
 
   constructor(startPos: PointData) {
     this.container = new Container();
@@ -98,8 +103,8 @@ export class Boid {
       console.log("hello boid");
     }
 
-    this.align(neighbors);
     this.cohere(neighbors);
+    this.align(neighbors);
     this.separate(neighbors);
     this.move(deltaTime);
   }
@@ -115,16 +120,32 @@ export class Boid {
 
   // Adjust velocity to steer toward center of mass
   private cohere(neighbors: Boid[]) {
+    if (neighbors.length == 0) return;
     
+    const averagePosition = Vector.getAverage(
+      neighbors.map((boid) => Vector.fromPoint(boid.position))
+    );
+    // Velocity required to move toward average position
+    this.velocity = averagePosition
+      .subtract(Vector.fromPoint(this.position))
+      .normalized()
+      .scale(this.speed);
   }
 
-  private separate(neighbors: Boid[]) {}
+  // If neighbor is within minDistance, steer away
+  private separate(neighbors: Boid[]) {
+    for (const neighbor of neighbors) {
+      if (Vector.getDistance(neighbor.position, this.position) <= this.minDistance) {
+
+      }
+    }
+  }
 
   // Move the boid to its desired position in the next frame based on its velocity
-  // Rotate the boid toward its direction of movement
   private move(deltaTime: number) {
     this.container.x += this.velocity.x * deltaTime;
     this.container.y += this.velocity.y * deltaTime;
+    // Rotate the boid toward its direction of movement
     this.container.angle =
       Math.atan2(this.velocity.y, this.velocity.x) * RAD_TO_DEG + 90;
     // Update viewField position to follow container
