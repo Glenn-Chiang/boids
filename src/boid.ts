@@ -7,7 +7,6 @@ import {
   Triangle,
 } from "pixi.js";
 import { Vector } from "./vector";
-import { getRandomNumber } from "./random";
 
 export class Boid {
   private readonly container: Container;
@@ -18,6 +17,8 @@ export class Boid {
   private readonly viewRadius = 120;
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
+
+  private initialSpeed = 4;
 
   constructor(startPos: PointData) {
     this.container = new Container();
@@ -38,9 +39,8 @@ export class Boid {
     // Render viewField graphic behind boid sprite
     this.container.addChildAt(viewFieldGraphic, 0);
 
-    const randomX = getRandomNumber(0, 1) * (Math.random() < 0.5 ? 1 : - 1)
-    const randomY = getRandomNumber(0, 1) * (Math.random() < 0.5 ? 1 : - 1)
-    this.velocity = new Vector(randomX, randomY)
+    // Set initial velocity with a random direction
+    this.velocity = Vector.randomVector(this.initialSpeed)
   }
 
   // Creates the boid sprite triangle centred in the container
