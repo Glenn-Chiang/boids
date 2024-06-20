@@ -105,12 +105,12 @@ export class Boid {
   }
 
   private align(neighbors: Boid[]) {
-    // Find average velocity of neigbors
-    const velocitySum = neighbors.reduce(
+    // Find average velocity of self and neighbors
+    const velocitySum = this.velocity.add(neighbors.reduce(
       (sum, neighbor) => sum.add(neighbor.velocity),
       new Vector(0, 0)
-    );
-    const averageVelocity = velocitySum.scale(1 / neighbors.length);
+    ));
+    const averageVelocity = velocitySum.scale(1 / (neighbors.length + 1));
     this.velocity = neighbors.length > 0 ? averageVelocity : this.velocity;
   }
 
