@@ -18,11 +18,15 @@ export class Boid {
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
 
-  private speed = 4;
+  private speed = 6;
 
   // Minimum distance between one boid and another.
   // If a neighboring boid is within this distance, this boid will move away from that neighbor.
-  private minDistance = 50;
+  private minDistance = 20;
+
+  private separationFactor = 0.05;
+  private alignmentFactor = 0.05;
+  private cohesionFactor = 0.005;
 
   constructor(startPos: PointData) {
     this.container = new Container();
@@ -36,11 +40,10 @@ export class Boid {
       this.viewRadius
     );
 
-    // Graphic representation of the viewField
+    // Visual outline of the viewField
     const viewFieldGraphic = new Graphics()
       .circle(0, 0, this.viewRadius)
       .stroke({ color: "#85C1E9" });
-    // Render viewField graphic behind boid sprite
     // this.container.addChildAt(viewFieldGraphic, 0);
 
     // Set initial velocity with a random direction
@@ -99,36 +102,51 @@ export class Boid {
         this.viewField.contains(boid.position.x, boid.position.y)
     );
 
-    this.velocity = this.align(neighbors)
-    .add(this.cohere(neighbors))
-    .add(this.separate(neighbors))
-      // .normalized()
-      // .scale(this.speed)
+    this.separate(neighbors)
+    this.align(neighbors)
+    this.cohere(neighbors)
+    this.velocity = this.velocity.normalized().scale(this.speed);
     this.move(deltaTime);
   }
 
-  // Returns a velocity that matches average velocity of neighbors including self
-  private align(neighbors: Boid[]): Vector {
+  // Update velocity to match average velocity of neighbors
+  private align(neighbors: Boid[]): void {
+    if (neighbors.length == 0) return;
+
     const averageVelocity: Vector = Vector.getAverage(
       [...neighbors, this].map((boid) => boid.velocity)
     );
-    return averageVelocity.normalized().scale(this.speed);
+
+    this.velocity = this.velocity.add(
+      averageVelocity.subtract(this.velocity).scale(this.alignmentFactor)
+    );
   }
 
-  // Returns a velocity that points toward center of mass of neighbors
-  private cohere(neighbors: Boid[]): Vector {
-    if (neighbors.length == 0) return Vector.ZERO;
+  // Update velocity to steer toward center of mass of neighbors
+  private cohere(neighbors: Boid[]): void {
+    if (neighbors.length == 0) return;
 
     const averagePosition = Vector.getAverage(
       neighbors.map((boid) => Vector.fromPoint(boid.position))
     );
 
+    if (
+      Vector.getDistance(this.position, averagePosition) <= this.minDistance
+    ) {
+      return;
+    }
+
+    const desiredVelocity = averagePosition.subtract(
+      Vector.fromPoint(this.position)
+    );
     // Desired velocity is the direction from current position to average position
-    return averagePosition.subtract(Vector.fromPoint(this.position)).normalized();
+    this.velocity = this.velocity.add(
+      desiredVelocity.subtract(this.velocity).scale(this.cohesionFactor)
+    );
   }
 
-  // Returns a velocity that points away from neighbors within minDistance
-  private separate(neighbors: Boid[]): Vector {
+  // Update velocity to steer away from neighbors that are within minDistance threshold
+  private separate(neighbors: Boid[]): void {
     // Get all neighbors that are within minDistance
     const nearNeighbors = neighbors.filter(
       (neighbor) =>
@@ -136,10 +154,10 @@ export class Boid {
     );
 
     // If no neighbors within minDistance, don't need to separate
-    if (nearNeighbors.length == 0) return Vector.ZERO;
+    if (nearNeighbors.length == 0) return;
 
-    // Get average direction of near neighbors
-    const averageDirection = Vector.getAverage(
+    // Desired velocity is the average direction vector from nearby neighbors to this boid
+    const desiredVelocity = Vector.getAverage(
       nearNeighbors.map((neighbor) => {
         // Direction from neighbor to this boid
         const direction = Vector.getDirection(this.position, neighbor.position);
@@ -148,9 +166,10 @@ export class Boid {
         return direction.scale(1 / distance);
       })
     );
-    // Steer in opposite direction
-    const separationForce = 1.5 // What exactly does this mean??
-    return averageDirection.normalized().scale(separationForce)
+
+    this.velocity = this.velocity.add(
+      desiredVelocity.subtract(this.velocity).scale(this.separationFactor)
+    );
   }
 
   // Move the boid to its desired position in the next frame based on its velocity
