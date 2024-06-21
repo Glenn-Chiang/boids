@@ -8,6 +8,7 @@ import {
   TextStyle,
 } from "pixi.js";
 import { Boid } from "./boid";
+import { makeWidget, widgetWidth } from "./widgets";
 
 const app = new Application();
 await app.init({ resizeTo: window, background: "white", antialias: true });
@@ -64,8 +65,7 @@ app.ticker.add((ticker) => {
 const parameters = ["Speed", "View radius", "Separation", "Alignment", "Cohesion"]
 
 const widgetPanel = new Container({ x: 0, y: container.height });
-const widgetWidth = 160
-const widgetHeight = 100
+
 app.stage.addChild(widgetPanel);
 
 const widgets: Container[] = []
@@ -74,32 +74,6 @@ for (let i = 0; i < parameters.length; i++) {
   const widget = makeWidget({x: i * widgetWidth, y: 0}, param)
   widgetPanel.addChild(widget)
   widgets.push(widget)
-}
-
-function makeWidget(position: PointData, labelString: string): Container {
-  const widget = new Container({ position });
-  const widgetBackground = new Graphics()
-  .rect(0, 0, widgetWidth, widgetHeight)
-  .stroke({ color: "#5DADE2"});
-  
-  const sliderLabelStyle = new TextStyle({
-    fontSize: 20,
-    fontFamily: "consolas",
-    fill: "#5DADE2",
-    align: "center",
-  });
-
-  const label = new Text({
-    text: labelString,
-    anchor: 0.5,
-    position: { x: widgetWidth / 2, y: 20 },
-    style: sliderLabelStyle,
-  });
-
-  widget.addChild(widgetBackground)
-  widget.addChild(label);
-
-  return widget;
 }
 
 // Absolutely clean implementation of responsive design :)
