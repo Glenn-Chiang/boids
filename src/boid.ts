@@ -49,8 +49,8 @@ export class Boid {
 
   // Creates the boid sprite triangle centred in the container
   private static createSprite(): Graphics {
-    const boidWidth = 16;
-    const boidHeight = 20;
+    const boidWidth = 12;
+    const boidHeight = 16;
 
     // The 3 vertices of the triangle
     const vertices: PointData[] = [
@@ -99,13 +99,11 @@ export class Boid {
         this.viewField.contains(boid.position.x, boid.position.y)
     );
 
-    this.velocity = this.velocity
-      .add(this.separate(neighbors))
-      .add(this.align(neighbors))
+    this.velocity = this.align(neighbors)
       .add(this.cohere(neighbors))
+      .add(this.separate(neighbors))
       .normalized()
-      .scale(this.speed);
-
+      .scale(this.speed)
     this.move(deltaTime);
   }
 
@@ -124,12 +122,6 @@ export class Boid {
     const averagePosition = Vector.getAverage(
       neighbors.map((boid) => Vector.fromPoint(boid.position))
     );
-
-    if (
-      Vector.getDistance(this.position, averagePosition) <= this.minDistance
-    ) {
-      return Vector.ZERO;
-    }
 
     // Desired velocity is the direction from current position to average position
     return averagePosition.subtract(Vector.fromPoint(this.position));
@@ -157,7 +149,8 @@ export class Boid {
       })
     );
     // Steer in opposite direction
-    return averageDirection.normalized().scale(1);
+    const separationForce = 20 // What exactly does this mean??
+    return averageDirection.normalized().scale(separationForce);
   }
 
   // Move the boid to its desired position in the next frame based on its velocity
