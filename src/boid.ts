@@ -3,8 +3,7 @@ import {
   Container,
   Graphics,
   PointData,
-  RAD_TO_DEG,
-  Triangle,
+  RAD_TO_DEG
 } from "pixi.js";
 import { Vector } from "./vector";
 
@@ -40,12 +39,6 @@ export class Boid {
       this.viewRadius
     );
 
-    // Visual outline of the viewField
-    const viewFieldGraphic = new Graphics()
-      .circle(0, 0, this.viewRadius)
-      .stroke({ color: "#85C1E9" });
-    // this.container.addChildAt(viewFieldGraphic, 0);
-
     // Set initial velocity with a random direction
     this.velocity = Vector.randomVector(this.speed);
   }
@@ -63,17 +56,6 @@ export class Boid {
     ];
 
     const sprite = new Graphics().poly(vertices).fill("white");
-
-    // Hit area of the sprite
-    const hitArea = new Triangle(
-      vertices[0].x,
-      vertices[0].y,
-      vertices[1].x,
-      vertices[1].y,
-      vertices[2].x,
-      vertices[2].y
-    );
-    sprite.hitArea = hitArea;
 
     return sprite;
   }
