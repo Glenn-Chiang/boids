@@ -1,4 +1,4 @@
-import { PointData } from "pixi.js";
+import { DEG_TO_RAD, PointData } from "pixi.js";
 
 export class Vector {
   public x: number
@@ -29,6 +29,10 @@ export class Vector {
     return this.scale(1 / this.magnitude)
   }
 
+  opposite(): Vector {
+    return this.scale(-1)
+  }
+
   static getAverage(vectors: Vector[]): Vector {
     const sum: Vector = vectors.reduce((sum, vector) => sum.add(vector), new Vector(0, 0))
     return sum.scale(1 / vectors.length)
@@ -46,7 +50,20 @@ export class Vector {
     return new Vector(point.x, point.y)
   }
 
-  static getDistance(pointA: PointData, pointB: PointData): number {
-    return Vector.fromPoint(pointA).subtract(Vector.fromPoint(pointB)).magnitude
+  rotate(degrees: number): Vector {
+    const angle = degrees * DEG_TO_RAD
+    const x = this.x * Math.cos(angle) - this.y * Math.sin(angle)
+    const y = this.x * Math.sin(angle) + this.y * Math.cos(angle)
+    return new Vector(x, y);
   }
+
+  static getDirection(to: PointData, from: PointData): Vector {
+    return Vector.fromPoint(to).subtract(Vector.fromPoint(from))
+  }
+
+  static getDistance(pointA: PointData, pointB: PointData): number {
+    return Vector.getDirection(pointA, pointB).magnitude
+  }
+
+  static ZERO = new Vector(0, 0)
 }

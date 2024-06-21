@@ -2,7 +2,6 @@ import {
   Circle,
   Container,
   Graphics,
-  Point,
   PointData,
   RAD_TO_DEG,
   Triangle,
@@ -15,7 +14,7 @@ export class Boid {
 
   private velocity: Vector;
 
-  private readonly viewRadius = 120;
+  private readonly viewRadius = 160;
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
 
@@ -23,7 +22,7 @@ export class Boid {
 
   // Minimum distance between one boid and another.
   // If a neighboring boid is within this distance, this boid will move away from that neighbor.
-  private minDistance = 20;
+  private minDistance = 40;
 
   constructor(startPos: PointData) {
     this.container = new Container();
@@ -99,46 +98,66 @@ export class Boid {
         boid != this &&
         this.viewField.contains(boid.position.x, boid.position.y)
     );
-    if (neighbors.length > 0) {
-      console.log("hello boid");
-    }
 
-    this.cohere(neighbors);
-    this.align(neighbors);
-    this.separate(neighbors);
+    this.velocity = this.velocity
+      .add(this.separate(neighbors))
+      .add(this.align(neighbors))
+      .add(this.cohere(neighbors))
+      .normalized()
+      .scale(this.speed);
+
     this.move(deltaTime);
   }
 
   // Adjust velocity to match average velocity of neighbors including self
-  private align(neighbors: Boid[]) {
+  private align(neighbors: Boid[]): Vector {
     const averageVelocity: Vector = Vector.getAverage(
       [...neighbors, this].map((boid) => boid.velocity)
     );
-    // Normalize to maintain same speed (TODO: Is this actually what we want?)
-    this.velocity = averageVelocity.normalized().scale(this.speed);
+    return averageVelocity.normalized().scale(this.speed);
   }
 
   // Adjust velocity to steer toward center of mass
-  private cohere(neighbors: Boid[]) {
-    if (neighbors.length == 0) return;
-    
+  private cohere(neighbors: Boid[]): Vector {
+    if (neighbors.length == 0) return Vector.ZERO;
+
     const averagePosition = Vector.getAverage(
       neighbors.map((boid) => Vector.fromPoint(boid.position))
     );
-    // Velocity required to move toward average position
-    this.velocity = averagePosition
-      .subtract(Vector.fromPoint(this.position))
-      .normalized()
-      .scale(this.speed);
+
+    if (
+      Vector.getDistance(this.position, averagePosition) <= this.minDistance
+    ) {
+      return Vector.ZERO;
+    }
+
+    // Desired velocity is the direction from current position to average position
+    return averagePosition.subtract(Vector.fromPoint(this.position));
   }
 
   // If neighbor is within minDistance, steer away
-  private separate(neighbors: Boid[]) {
-    for (const neighbor of neighbors) {
-      if (Vector.getDistance(neighbor.position, this.position) <= this.minDistance) {
+  private separate(neighbors: Boid[]): Vector {
+    // Get all neighbors that are within minDistance
+    const nearNeighbors = neighbors.filter(
+      (neighbor) =>
+        Vector.getDistance(neighbor.position, this.position) <= this.minDistance
+    );
 
-      }
-    }
+    // If no neighbors within minDistance, don't need to separate
+    if (nearNeighbors.length == 0) return Vector.ZERO;
+
+    // Get average direction of near neighbors
+    const averageDirection = Vector.getAverage(
+      nearNeighbors.map((neighbor) => {
+        // Direction from neighbor to this boid
+        const direction = Vector.getDirection(this.position, neighbor.position);
+        const distance = direction.magnitude;
+        // Direction vector is given a weight inversely proportional to its distance from this boid
+        return direction.scale(1 / distance);
+      })
+    );
+    // Steer in opposite direction
+    return averageDirection.normalized().scale(1);
   }
 
   // Move the boid to its desired position in the next frame based on its velocity

@@ -52,4 +52,5 @@ app.ticker.add((ticker) => {
       });
     }
   }
+
 });
