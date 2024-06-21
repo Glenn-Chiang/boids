@@ -14,7 +14,7 @@ export class Boid {
 
   private velocity: Vector;
 
-  private readonly viewRadius = 160;
+  private readonly viewRadius = 120;
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
 
@@ -22,7 +22,7 @@ export class Boid {
 
   // Minimum distance between one boid and another.
   // If a neighboring boid is within this distance, this boid will move away from that neighbor.
-  private minDistance = 40;
+  private minDistance = 50;
 
   constructor(startPos: PointData) {
     this.container = new Container();
@@ -41,7 +41,7 @@ export class Boid {
       .circle(0, 0, this.viewRadius)
       .stroke({ color: "#85C1E9" });
     // Render viewField graphic behind boid sprite
-    this.container.addChildAt(viewFieldGraphic, 0);
+    // this.container.addChildAt(viewFieldGraphic, 0);
 
     // Set initial velocity with a random direction
     this.velocity = Vector.randomVector(this.speed);
@@ -100,14 +100,14 @@ export class Boid {
     );
 
     this.velocity = this.align(neighbors)
-      .add(this.cohere(neighbors))
-      .add(this.separate(neighbors))
-      .normalized()
-      .scale(this.speed)
+    .add(this.cohere(neighbors))
+    .add(this.separate(neighbors))
+      // .normalized()
+      // .scale(this.speed)
     this.move(deltaTime);
   }
 
-  // Adjust velocity to match average velocity of neighbors including self
+  // Returns a velocity that matches average velocity of neighbors including self
   private align(neighbors: Boid[]): Vector {
     const averageVelocity: Vector = Vector.getAverage(
       [...neighbors, this].map((boid) => boid.velocity)
@@ -115,7 +115,7 @@ export class Boid {
     return averageVelocity.normalized().scale(this.speed);
   }
 
-  // Adjust velocity to steer toward center of mass
+  // Returns a velocity that points toward center of mass of neighbors
   private cohere(neighbors: Boid[]): Vector {
     if (neighbors.length == 0) return Vector.ZERO;
 
@@ -124,10 +124,10 @@ export class Boid {
     );
 
     // Desired velocity is the direction from current position to average position
-    return averagePosition.subtract(Vector.fromPoint(this.position));
+    return averagePosition.subtract(Vector.fromPoint(this.position)).normalized();
   }
 
-  // If neighbor is within minDistance, steer away
+  // Returns a velocity that points away from neighbors within minDistance
   private separate(neighbors: Boid[]): Vector {
     // Get all neighbors that are within minDistance
     const nearNeighbors = neighbors.filter(
@@ -149,8 +149,8 @@ export class Boid {
       })
     );
     // Steer in opposite direction
-    const separationForce = 20 // What exactly does this mean??
-    return averageDirection.normalized().scale(separationForce);
+    const separationForce = 1.5 // What exactly does this mean??
+    return averageDirection.normalized().scale(separationForce)
   }
 
   // Move the boid to its desired position in the next frame based on its velocity

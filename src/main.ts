@@ -5,8 +5,8 @@ const app = new Application();
 await app.init({ resizeTo: window, background: "white", antialias: true });
 document.body.appendChild(app.canvas);
 
-const containerWidth = 800;
-const containerHeight = 640;
+const containerWidth = 960;
+const containerHeight = 800;
 
 // Main container in which boids will be spawned
 const container = new Container();
@@ -46,9 +46,12 @@ app.ticker.add((ticker) => {
     if (
       !container.getBounds().containsPoint(boid.position.x, boid.position.y)
     ) {
+      const offset = 2;
+      const xOffset = boid.position.x > containerWidth ? offset : -offset
+      const yOffset = boid.position.y > containerHeight ? offset : -offset
       boid.setPosition({
-        x: container.getBounds().width - boid.position.x,
-        y: container.getBounds().height - boid.position.y,
+        x: container.getBounds().width - boid.position.x + xOffset,
+        y: container.getBounds().height - boid.position.y + yOffset,
       });
     }
   }
