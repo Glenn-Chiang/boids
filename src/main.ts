@@ -1,4 +1,11 @@
-import { Application, Container, Graphics, Rectangle } from "pixi.js";
+import {
+  Application,
+  Container,
+  Graphics,
+  Rectangle,
+  Text,
+  TextStyle,
+} from "pixi.js";
 import { Flock } from "./flock";
 import { makeWidget, widgetWidth } from "./widgets";
 
@@ -26,6 +33,21 @@ const mask = new Graphics()
   .fill("white");
 container.mask = mask;
 
+// Display prompt for user to spawn boids
+const promptText = new Text({
+  text: "Click to spawn boids",
+  anchor: 0.5,
+  position: { x: CONTAINER_WIDTH / 2, y: CONTAINER_HEIGHT / 2 },
+  style: {
+    fontSize: 20,
+    fontFamily: "consolas",
+    fill: "white",
+    align: "center",
+  },
+});
+
+container.addChild(promptText);
+
 // Manages all boids
 const flock = new Flock(container);
 
@@ -34,6 +56,7 @@ container.eventMode = "static";
 container.on("pointerdown", (event) => {
   const clickedPos = event.global;
   flock.spawnBoid(clickedPos);
+  promptText.visible = false
 });
 
 app.ticker.add((ticker) => {
@@ -63,6 +86,7 @@ const parameters = [
   },
 ];
 
+// Add widgets to control simulation parameters
 const widgetPanel = new Container({ x: 0, y: container.height });
 
 app.stage.addChild(widgetPanel);
@@ -78,13 +102,3 @@ for (let i = 0; i < parameters.length; i++) {
   widgetPanel.addChild(widget);
   widgets.push(widget);
 }
-
-// Absolutely clean implementation of responsive design :)
-window.onresize = () => {
-  // const newWidth = app.canvas.width;
-  // const newHeight = app.canvas.height * containerRatio
-  // // app.renderer.resize(window.innerWidth, window.innerHeight)
-  // background.width = newWidth;
-  // background.setSize(newWidth, newHeight);
-  // container.boundsArea = new Rectangle(0, 0, newWidth, newHeight);
-};
