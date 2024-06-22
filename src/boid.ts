@@ -3,7 +3,7 @@ import { Flock } from "./flock";
 import { Vector } from "./vector";
 
 export class Boid {
-  private readonly flock: Flock
+  private readonly flock: Flock;
 
   private readonly container: Container;
   private readonly sprite: Graphics;
@@ -21,7 +21,6 @@ export class Boid {
   // If a neighboring boid is within this distance, this boid will move away from that neighbor
   private minDistance = 20;
 
-  
   get separationFactor(): number {
     return this.flock.separationFactor.value;
   }
@@ -35,12 +34,12 @@ export class Boid {
   }
 
   constructor(startPos: PointData, flock: Flock) {
-    this.flock = flock
+    this.flock = flock;
     this.container = new Container();
     this.container.position = startPos;
     this.sprite = Boid.createSprite();
     this.container.addChild(this.sprite);
-    flock.container.addChild(this.container)
+    flock.container.addChild(this.container);
 
     this.viewField = new Circle(
       this.container.position.x,
@@ -93,6 +92,9 @@ export class Boid {
     this.cohere(neighbors);
     this.velocity = this.velocity.normalized().scale(this.speed);
     this.move(deltaTime);
+
+    // Update viewField circle to match the corresponding param
+    this.viewField.radius = this.flock.viewRadius.value
   }
 
   // Update velocity to match average velocity of neighbors
@@ -169,5 +171,4 @@ export class Boid {
     this.viewField.x = this.container.x;
     this.viewField.y = this.container.y;
   }
-
 }

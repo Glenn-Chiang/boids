@@ -80,10 +80,10 @@ export function makeWidget(
 
     // How much the slider handle has been dragged between min and max points
     const sliderRatio = handle.x / sliderWidth;
+    // Adjust the parameter based on the slider ratio
     parameter.setValue(
       parameter.minVal + sliderRatio * (parameter.maxVal - parameter.minVal)
     );
-    console.log(parameter.value);
   }
 
   widget.addChild(widgetBackground);
