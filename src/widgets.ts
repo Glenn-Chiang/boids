@@ -6,6 +6,7 @@ import {
   Text,
   FederatedPointerEvent,
 } from "pixi.js";
+import { Parameter } from "./parameter";
 
 export const widgetWidth = 160;
 export const widgetHeight = 100;
@@ -14,12 +15,13 @@ const primaryColor = "#5DADE2";
 
 export function makeWidget(
   position: PointData,
-  labelString: string
+  labelString: string,
+  parameter: Parameter
 ): Container {
   const widget = new Container({ position });
   const widgetBackground = new Graphics()
     .rect(0, 0, widgetWidth, widgetHeight)
-    .fill('white')
+    .fill("white")
     .stroke({ color: "#5DADE2" });
 
   const sliderLabelStyle = new TextStyle({
@@ -44,7 +46,9 @@ export function makeWidget(
 
   const handle = new Graphics().circle(0, 0, 8).fill({ color: primaryColor });
   handle.y = slider.height / 2;
-  handle.x = sliderWidth / 2;
+  // Position of the handle should reflect the parameter value
+  handle.x =
+    (parameter.minVal + parameter.value / parameter.maxVal) * sliderWidth;
   handle.eventMode = "static";
 
   handle
@@ -65,16 +69,18 @@ export function makeWidget(
   }
 
   function onDrag(event: FederatedPointerEvent) {
-    console.log("dragging");
-    const halfHandleWidth = handle.width / 2;
-    // Set handle y-position to match pointer, clamped to (4, screen.height - 4).
-
+    const pointerPos = event.global
     handle.x = Math.max(
-      halfHandleWidth,
-      Math.min(slider.toLocal(event.global).x, sliderWidth - halfHandleWidth)
+      0,
+      Math.min(slider.toLocal(pointerPos).x, sliderWidth)
     );
-    // Normalize handle position between -1 and 1.
-    const t = 2 * (handle.x / sliderWidth - 0.5);
+
+    // How much the slider handle has been dragged between min and max points
+    const sliderRatio = handle.x / sliderWidth;
+    parameter.setValue(
+      parameter.minVal + sliderRatio * (parameter.maxVal - parameter.minVal)
+    );
+    console.log(parameter.value);
   }
 
   widget.addChild(widgetBackground);

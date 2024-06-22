@@ -5,11 +5,11 @@ import { Parameter } from "./parameter";
 export class Flock {
   container: Container;
 
-  readonly viewRadius = new Parameter(120, 80, 160); // TODO:View field also needs to be updated whenever viewRadius param is updated
-  readonly speedParam = new Parameter(4, 2, 8); // Movement speed
-  readonly separationParam = new Parameter(0.05, 0, 0.05);
-  readonly alignmentParam = new Parameter(0.05, 0, 0.05);
-  readonly cohesionParam = new Parameter(0.0025, 0, 0.005);
+  readonly speed = new Parameter(4, 0, 8); // Movement speed
+  readonly viewRadius = new Parameter(120, 0, 160); // TODO:View field also needs to be updated whenever viewRadius param is updated
+  readonly separationFactor = new Parameter(0.05, 0, 0.05);
+  readonly alignmentFactor = new Parameter(0.05, 0, 0.05);
+  readonly cohesionFactor = new Parameter(0.0025, 0, 0.005);
 
   boids: Boid[] = [];
 
@@ -48,10 +48,10 @@ export class Flock {
 
   resetParams(): void {
     for (const param of [
-      this.speedParam,
-      this.separationParam,
-      this.alignmentParam,
-      this.cohesionParam,
+      this.speed,
+      this.separationFactor,
+      this.alignmentFactor,
+      this.cohesionFactor,
     ]) {
       param.reset();
     }

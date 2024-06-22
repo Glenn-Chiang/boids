@@ -14,7 +14,7 @@ export class Boid {
   private readonly viewField: Circle;
 
   get speed(): number {
-    return this.flock.speedParam.currentVal;
+    return this.flock.speed.value;
   }
 
   // Minimum distance between one boid and another.
@@ -23,15 +23,15 @@ export class Boid {
 
   
   get separationFactor(): number {
-    return this.flock.separationParam.currentVal;
+    return this.flock.separationFactor.value;
   }
 
   get alignmentFactor(): number {
-    return this.flock.alignmentParam.currentVal;
+    return this.flock.alignmentFactor.value;
   }
 
   get cohesionFactor(): number {
-    return this.flock.cohesionParam.currentVal;
+    return this.flock.cohesionFactor.value;
   }
 
   constructor(startPos: PointData, flock: Flock) {
@@ -45,7 +45,7 @@ export class Boid {
     this.viewField = new Circle(
       this.container.position.x,
       this.container.position.y,
-      this.flock.viewRadius.currentVal
+      this.flock.viewRadius.value
     );
 
     // Set initial velocity with a random direction

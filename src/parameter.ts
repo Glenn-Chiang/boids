@@ -2,20 +2,24 @@ export class Parameter {
   readonly defaultVal: number;
   readonly minVal: number;
   readonly maxVal: number;
-  currentVal: number;
+  private _value: number;
+
+  get value(): number {
+    return this._value
+  }
 
   constructor(defaultVal: number, min: number, max: number) {
     this.defaultVal = defaultVal;
-    this.currentVal = defaultVal;
+    this._value = defaultVal;
     this.minVal = min;
     this.maxVal = max;
   }
 
   setValue(newValue: number): void {
-    this.currentVal = Math.max(this.minVal, Math.min(newValue, this.maxVal));
+    this._value = Math.max(this.minVal, Math.min(newValue, this.maxVal));
   }
 
   reset() {
-    this.currentVal = this.defaultVal;
+    this._value = this.defaultVal;
   }
 }
