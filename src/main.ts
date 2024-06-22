@@ -27,15 +27,14 @@ const background = new Graphics()
   .fill("#5DADE2");
 container.addChild(background);
 
+// Manages all boids
 const flock = new Flock(container)
 
 // User can spawn new boids by clicking anywhere on the container
 container.eventMode = "static";
 container.on("pointerdown", (event) => {
   const clickedPos = event.global;
-  const boid = new Boid(clickedPos, flock);
-  boid.spawn(container);
-  flock.addBoid(boid)
+  flock.spawnBoid(clickedPos)
 });
 
 app.ticker.add((ticker) => {

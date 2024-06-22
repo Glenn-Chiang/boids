@@ -1,4 +1,4 @@
-import { Container } from "pixi.js";
+import { Container, PointData } from "pixi.js";
 import { Boid } from "./boid";
 import { Parameter } from "./parameter";
 
@@ -17,7 +17,8 @@ export class Flock {
     this.container = container;
   }
 
-  addBoid(boid: Boid): void {
+  spawnBoid(position: PointData): void {
+    const boid = new Boid(position, this)
     this.boids.push(boid);
   }
 

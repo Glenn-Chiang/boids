@@ -40,6 +40,7 @@ export class Boid {
     this.container.position = startPos;
     this.sprite = Boid.createSprite();
     this.container.addChild(this.sprite);
+    flock.container.addChild(this.container)
 
     this.viewField = new Circle(
       this.container.position.x,
@@ -66,11 +67,6 @@ export class Boid {
     const sprite = new Graphics().poly(vertices).fill("white");
 
     return sprite;
-  }
-
-  // Add the boid to the given container
-  spawn(container: Container) {
-    container.addChild(this.container);
   }
 
   get position(): PointData {
