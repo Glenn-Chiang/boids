@@ -3,8 +3,7 @@ import {
   Container,
   Graphics,
   Rectangle,
-  Text,
-  TextStyle,
+  Text
 } from "pixi.js";
 import { Flock } from "./flock";
 import { makeWidget, widgetWidth } from "./widgets";
