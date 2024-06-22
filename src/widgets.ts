@@ -53,13 +53,13 @@ export function makeWidget(
     .on("pointerupoutside", onDragEnd);
 
   // Start dragging slider handle
-  function onDragStart(event: FederatedPointerEvent) {
+  function onDragStart() {
     widget.eventMode = "static";
     widget.addEventListener("pointermove", onDrag);
   }
 
   // Stop dragging slider handle
-  function onDragEnd(event: FederatedPointerEvent) {
+  function onDragEnd() {
     widget.eventMode = "auto";
     widget.removeEventListener("pointermove", onDrag);
   }

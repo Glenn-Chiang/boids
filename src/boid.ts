@@ -1,14 +1,10 @@
-import {
-  Circle,
-  Container,
-  Graphics,
-  PointData,
-  RAD_TO_DEG
-} from "pixi.js";
+import { Circle, Container, Graphics, PointData, RAD_TO_DEG } from "pixi.js";
+import { Flock } from "./flock";
 import { Vector } from "./vector";
-import { Parameter } from "./parameter";
 
 export class Boid {
+  private readonly flock: Flock
+
   private readonly container: Container;
   private readonly sprite: Graphics;
 
@@ -16,33 +12,30 @@ export class Boid {
 
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
-  readonly viewRadius = new Parameter(120, 80, 160)
 
-  readonly speedParam = new Parameter(4, 2, 8) // Movement speed
   get speed(): number {
-    return this.speedParam.currentVal
+    return this.flock.speedParam.currentVal;
   }
 
   // Minimum distance between one boid and another.
   // If a neighboring boid is within this distance, this boid will move away from that neighbor
   private minDistance = 20;
+
   
-  readonly separationParam = new Parameter(0.05, 0.05, 0.05)
   get separationFactor(): number {
-    return this.separationParam.currentVal
+    return this.flock.separationParam.currentVal;
   }
 
-  readonly alignmentParam = new Parameter(0.05, 0.05, 0.05)
   get alignmentFactor(): number {
-    return this.alignmentParam.currentVal
+    return this.flock.alignmentParam.currentVal;
   }
 
-  readonly cohesionParam = new Parameter(0.0025, 0.001, 0.005)
   get cohesionFactor(): number {
-    return this.cohesionParam.currentVal
+    return this.flock.cohesionParam.currentVal;
   }
 
-  constructor(startPos: PointData) {
+  constructor(startPos: PointData, flock: Flock) {
+    this.flock = flock
     this.container = new Container();
     this.container.position = startPos;
     this.sprite = Boid.createSprite();
@@ -51,7 +44,7 @@ export class Boid {
     this.viewField = new Circle(
       this.container.position.x,
       this.container.position.y,
-      this.viewRadius.currentVal
+      this.flock.viewRadius.currentVal
     );
 
     // Set initial velocity with a random direction
@@ -99,9 +92,9 @@ export class Boid {
         this.viewField.contains(boid.position.x, boid.position.y)
     );
 
-    this.separate(neighbors)
-    this.align(neighbors)
-    this.cohere(neighbors)
+    this.separate(neighbors);
+    this.align(neighbors);
+    this.cohere(neighbors);
     this.velocity = this.velocity.normalized().scale(this.speed);
     this.move(deltaTime);
   }
@@ -180,4 +173,5 @@ export class Boid {
     this.viewField.x = this.container.x;
     this.viewField.y = this.container.y;
   }
+
 }
