@@ -6,7 +6,6 @@ import {
 } from "pixi.js";
 import { Flock } from "./flock";
 import { makeWidget, widgetWidth } from "./widgets";
-import { Parameter } from "./parameter";
 
 const app = new Application();
 await app.init({ resizeTo: window, background: "black", antialias: true });

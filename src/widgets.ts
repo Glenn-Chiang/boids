@@ -43,6 +43,7 @@ export function makeWidget(
     .fill({ color: primaryColor });
   slider.x = (widgetWidth - sliderWidth) / 2;
   slider.y = widgetHeight / 2;
+  slider.eventMode = 'static'
 
   const handle = new Graphics().circle(0, 0, 8).fill({ color: primaryColor });
   handle.y = slider.height / 2;
@@ -50,6 +51,11 @@ export function makeWidget(
   handle.x =
     (parameter.minVal + parameter.value / parameter.maxVal) * sliderWidth;
   handle.eventMode = "static";
+
+  slider.on("pointerdown", (event) => {
+    handle.x = slider.toLocal(event.global).x
+    onDragStart()
+  });
 
   handle
     .on("pointerdown", onDragStart)
@@ -69,11 +75,8 @@ export function makeWidget(
   }
 
   function onDrag(event: FederatedPointerEvent) {
-    const pointerPos = event.global
-    handle.x = Math.max(
-      0,
-      Math.min(slider.toLocal(pointerPos).x, sliderWidth)
-    );
+    const pointerPos = event.global;
+    handle.x = Math.max(0, Math.min(slider.toLocal(pointerPos).x, sliderWidth));
 
     // How much the slider handle has been dragged between min and max points
     const sliderRatio = handle.x / sliderWidth;

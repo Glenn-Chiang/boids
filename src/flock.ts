@@ -5,10 +5,10 @@ import { Parameter } from "./parameter";
 export class Flock {
   container: Container;
 
-  readonly speed = new Parameter(4, 0, 8); // Movement speed
+  readonly speed = new Parameter(5, 0, 10); // Movement speed
   readonly viewRadius = new Parameter(120, 0, 160); // TODO:View field also needs to be updated whenever viewRadius param is updated
-  readonly separationFactor = new Parameter(0.05, 0, 0.05);
-  readonly alignmentFactor = new Parameter(0.05, 0, 0.05);
+  readonly separationFactor = new Parameter(0.05, 0, 0.1);
+  readonly alignmentFactor = new Parameter(0.05, 0, 0.1);
   readonly cohesionFactor = new Parameter(0.0025, 0, 0.005);
 
   boids: Boid[] = [];
