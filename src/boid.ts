@@ -6,6 +6,7 @@ import {
   RAD_TO_DEG
 } from "pixi.js";
 import { Vector } from "./vector";
+import { Parameter } from "./parameter";
 
 export class Boid {
   private readonly container: Container;
@@ -13,19 +14,33 @@ export class Boid {
 
   private velocity: Vector;
 
-  private readonly viewRadius = 120;
   // Area in which the boid is aware of other boids
   private readonly viewField: Circle;
+  readonly viewRadius = new Parameter(120, 80, 160)
 
-  private speed = 6;
+  readonly speedParam = new Parameter(4, 2, 8) // Movement speed
+  get speed(): number {
+    return this.speedParam.currentVal
+  }
 
   // Minimum distance between one boid and another.
-  // If a neighboring boid is within this distance, this boid will move away from that neighbor.
+  // If a neighboring boid is within this distance, this boid will move away from that neighbor
   private minDistance = 20;
+  
+  readonly separationParam = new Parameter(0.05, 0.05, 0.05)
+  get separationFactor(): number {
+    return this.separationParam.currentVal
+  }
 
-  private separationFactor = 0.05;
-  private alignmentFactor = 0.05;
-  private cohesionFactor = 0.005;
+  readonly alignmentParam = new Parameter(0.05, 0.05, 0.05)
+  get alignmentFactor(): number {
+    return this.alignmentParam.currentVal
+  }
+
+  readonly cohesionParam = new Parameter(0.0025, 0.001, 0.005)
+  get cohesionFactor(): number {
+    return this.cohesionParam.currentVal
+  }
 
   constructor(startPos: PointData) {
     this.container = new Container();
@@ -36,7 +51,7 @@ export class Boid {
     this.viewField = new Circle(
       this.container.position.x,
       this.container.position.y,
-      this.viewRadius
+      this.viewRadius.currentVal
     );
 
     // Set initial velocity with a random direction

@@ -19,6 +19,7 @@ export function makeWidget(
   const widget = new Container({ position });
   const widgetBackground = new Graphics()
     .rect(0, 0, widgetWidth, widgetHeight)
+    .fill('white')
     .stroke({ color: "#5DADE2" });
 
   const sliderLabelStyle = new TextStyle({

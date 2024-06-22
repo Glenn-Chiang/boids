@@ -2,10 +2,7 @@ import {
   Application,
   Container,
   Graphics,
-  PointData,
-  Rectangle,
-  Text,
-  TextStyle,
+  Rectangle
 } from "pixi.js";
 import { Boid } from "./boid";
 import { makeWidget, widgetWidth } from "./widgets";
@@ -15,8 +12,8 @@ await app.init({ resizeTo: window, background: "white", antialias: true });
 document.body.appendChild(app.canvas);
 
 const containerProportion = 0.8;
-const containerWidth = app.canvas.width;
-const containerHeight = app.canvas.height * containerProportion;
+const containerWidth = 800;
+const containerHeight = 640
 
 // Main container in which boids will be spawned
 const container = new Container();
@@ -78,10 +75,10 @@ for (let i = 0; i < parameters.length; i++) {
 
 // Absolutely clean implementation of responsive design :)
 window.onresize = () => {
-  const newWidth = app.canvas.width;
-  const newHeight = app.canvas.height * containerProportion;
-  background.width = newWidth;
-  background.setSize(newWidth, newHeight);
-  container.boundsArea = new Rectangle(0, 0, newWidth, newHeight);
+  // const newWidth = app.canvas.width;
+  // const newHeight = app.canvas.height * containerProportion;
+  // background.width = newWidth;
+  // background.setSize(newWidth, newHeight);
+  // container.boundsArea = new Rectangle(0, 0, newWidth, newHeight);
 
 };
