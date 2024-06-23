@@ -6,7 +6,7 @@ export class Flock {
   container: Container;
 
   readonly speed = new Parameter(5, 1, 15);
-  readonly viewRadius = new Parameter(120, 0, 200);
+  readonly viewRadius = new Parameter(120, 0, 300);
   readonly separationFactor = new Parameter(0.05, 0, 0.1);
   readonly alignmentFactor = new Parameter(0.05, 0, 0.1);
   readonly cohesionFactor = new Parameter(0.0025, 0, 0.005);
