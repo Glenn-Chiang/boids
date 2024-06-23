@@ -1,12 +1,12 @@
+import './index.css'
 import { Application, Container, Graphics, Rectangle, Text } from "pixi.js";
 import { Flock } from "./flock";
-import { makeWidget, widgetWidth } from "./widgets";
 
 (async () => {
   const app = new Application();
-  await app.init({ resizeTo: window, background: "white", antialias: true });
-  document.body.appendChild(app.canvas);
-
+  await app.init({ background: "white", antialias: true });
+  (document.getElementById('canvas-area') as HTMLDivElement).appendChild(app.canvas);
+  
   const CONTAINER_WIDTH = 800;
   const CONTAINER_HEIGHT = 640;
 
@@ -80,20 +80,8 @@ import { makeWidget, widgetWidth } from "./widgets";
     },
   ];
 
-  // Add widgets to control simulation parameters
-  const widgetPanel = new Container({ x: 0, y: container.height });
+  const dashboard = document.getElementById('dashboard') as HTMLElement
 
-  app.stage.addChild(widgetPanel);
-
-  const widgets: Container[] = [];
-  for (let i = 0; i < parameters.length; i++) {
-    const parameter = parameters[i];
-    const widget = makeWidget(
-      { x: i * widgetWidth, y: 0 },
-      parameter.label,
-      parameter.param
-    );
-    widgetPanel.addChild(widget);
-    widgets.push(widget);
-  }
+  
+  
 })();

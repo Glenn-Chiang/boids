@@ -1,13 +1,48 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Boids</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" type="text/css" href="src/index.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boids</title>
+</head>
+
+<body>
+  <main id="app">
+    <h1>boids</h1>
+    <p>A simulation of flocking behaviour</p>
+    <div id="canvas-area">
+    </div>
+    <div>
+      <h2>Parameters</h2>
+      <div id="dashboard">
+        <div class="parameter">
+          <label for="speed">Speed</label>
+          <input type="range" id="speed" name="speed" />
+        </div>
+        <div class="parameter">
+          <label for="view-radius">View radius</label>
+          <input type="range" id="view-radius" name="view-radius" />
+        </div>
+        <div class="parameter">
+          <label for="separation">Separation</label>
+          <input type="range" id="separation" name="separation" />
+        </div>
+        <div class="parameter">
+          <label for="alignment">Alignment</label>
+          <input type="range" id="alignment" name="alignment" />
+        </div>
+        <div class="parameter">
+          <label for="cohesion">Cohesion</label>
+          <input type="range" id="cohesion" name="cohesion" />
+        </div>
+
+      </div>
+    </div>
+  </main>
+  <script type="module" src="src/main.ts"></script>
+</body>
+
 </html>
