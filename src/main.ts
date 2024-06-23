@@ -77,7 +77,7 @@ import "./index.css";
     });
   }
 
-  updateSliders()
+  updateSliders();
 
   // Update sliders to reflect their corresponding parameter values
   function updateSliders() {
@@ -97,12 +97,12 @@ import "./index.css";
   // Register event listeners for buttons to reset params and clear boids from screen
   const resetParamsButton = document.getElementById("reset-parameters");
   resetParamsButton?.addEventListener("click", () => {
-    flock.resetParams();
-    updateSliders()
+    flock.resetParams(); // Reset all parameters to original values
+    updateSliders();
   });
 
   const clearBoidsButton = document.getElementById("clear-boids");
   clearBoidsButton?.addEventListener("click", () => {
-    flock.clear();
+    flock.clear(); // Remove all boids from canvas
   });
 })();

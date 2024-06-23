@@ -39,17 +39,17 @@ export class Boid {
     this.container.position = startPos;
     this.sprite = Boid.createSprite();
     this.container.addChild(this.sprite);
-    
+
     this.viewField = new Circle(
       this.container.position.x,
       this.container.position.y,
       this.flock.viewRadius.value
     );
-    
+
     // Set initial velocity with a random direction
     this.velocity = Vector.randomVector(this.speed);
   }
-  
+
   spawn(): void {
     this.flock.container.addChild(this.container);
   }
@@ -97,7 +97,7 @@ export class Boid {
     this.move(deltaTime);
 
     // Update viewField circle to match the corresponding param
-    this.viewField.radius = this.flock.viewRadius.value
+    this.viewField.radius = this.flock.viewRadius.value;
   }
 
   // Update velocity to match average velocity of neighbors

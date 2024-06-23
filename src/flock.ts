@@ -5,7 +5,7 @@ import { Parameter } from "./parameter";
 export class Flock {
   container: Container;
 
-  readonly speed = new Parameter(5, 1, 15); 
+  readonly speed = new Parameter(5, 1, 15);
   readonly viewRadius = new Parameter(120, 0, 200);
   readonly separationFactor = new Parameter(0.05, 0, 0.1);
   readonly alignmentFactor = new Parameter(0.05, 0, 0.1);
@@ -18,9 +18,9 @@ export class Flock {
   }
 
   spawnBoid(position: PointData): void {
-    const boid = new Boid(position, this)
+    const boid = new Boid(position, this);
     this.boids.push(boid);
-    boid.spawn()
+    boid.spawn();
   }
 
   update(deltaTime: number): void {
@@ -59,6 +59,7 @@ export class Flock {
   }
 
   clear(): void {
-    this.boids = []
+    this.container.removeChildren();
+    this.boids = [];
   }
 }
