@@ -1,12 +1,14 @@
-import './index.css'
+import "./index.css";
 import { Application, Container, Graphics, Rectangle, Text } from "pixi.js";
 import { Flock } from "./flock";
 
 (async () => {
   const app = new Application();
   await app.init({ background: "white", antialias: true });
-  (document.getElementById('canvas-area') as HTMLDivElement).appendChild(app.canvas);
-  
+  (document.getElementById("canvas-area") as HTMLDivElement).appendChild(
+    app.canvas
+  );
+
   const CONTAINER_WIDTH = 800;
   const CONTAINER_HEIGHT = 640;
 
@@ -59,29 +61,41 @@ import { Flock } from "./flock";
 
   const parameters = [
     {
-      label: "Speed",
+      label: "speed",
       param: flock.speed,
     },
     {
-      label: "View radius",
+      label: "view-radius",
       param: flock.viewRadius,
     },
     {
-      label: "Separation",
+      label: "separation",
       param: flock.separationFactor,
     },
     {
-      label: "Alignment",
+      label: "alignment",
       param: flock.alignmentFactor,
     },
     {
-      label: "Cohesion",
+      label: "cohesion",
       param: flock.cohesionFactor,
     },
   ];
 
-  const dashboard = document.getElementById('dashboard') as HTMLElement
+  for (const paramMap of parameters) {
+    const slider = document.getElementById(paramMap.label) as HTMLInputElement;
+    const param = paramMap.param;
+    // Slider value should represent the ratio of the parameter's current value relative to its min and max values
+    slider.value = (
+      (param.minVal +
+        (param.value - param.minVal) / (param.maxVal - param.minVal)) *
+      100
+    ).toString();
 
-  
-  
+    slider.addEventListener("input", (event) => {
+      const sliderValue = (event.target as HTMLInputElement)?.value;
+      const ratio = Number(sliderValue) / 100;
+      param.setValue(param.minVal + ratio * (param.maxVal - param.minVal));
+    });
+  }
 })();
