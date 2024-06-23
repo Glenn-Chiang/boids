@@ -16,11 +16,11 @@ import "./index.css";
 
   // Display prompt for user to spawn boids
   const promptText = new Text({
-    text: "Click to spawn boids",
+    text: "Click anywhere to spawn boids",
     anchor: 0.5,
     position: { x: app.canvas.width / 2, y: app.canvas.height / 2 },
     style: {
-      fontSize: 20,
+      fontSize: 32,
       fontFamily: "consolas",
       fill: "white",
       align: "center",
@@ -66,20 +66,43 @@ import "./index.css";
     },
   ];
 
-  // Add event listener for each slider to control its corresponding parameter
+  // Register event listener for each slider to control its corresponding parameter
   for (const paramMap of parameters) {
     const slider = document.getElementById(paramMap.label) as HTMLInputElement;
     const param = paramMap.param;
-    // Slider value should represent the ratio of the parameter's current value relative to its min and max values
-    slider.value = (
-      ((param.value - param.minVal) / (param.maxVal - param.minVal)) *
-      100
-    ).toString();
-
     slider.addEventListener("input", (event) => {
       const sliderValue = (event.target as HTMLInputElement)?.value;
       const ratio = Number(sliderValue) / 100;
       param.setValue(param.minVal + ratio * (param.maxVal - param.minVal));
     });
   }
+
+  updateSliders()
+
+  // Update sliders to reflect their corresponding parameter values
+  function updateSliders() {
+    for (const paramMap of parameters) {
+      const slider = document.getElementById(
+        paramMap.label
+      ) as HTMLInputElement;
+      const param = paramMap.param;
+      // Slider value should represent the ratio of the parameter's current value relative to its min and max values
+      slider.value = (
+        ((param.value - param.minVal) / (param.maxVal - param.minVal)) *
+        100
+      ).toString();
+    }
+  }
+
+  // Register event listeners for buttons to reset params and clear boids from screen
+  const resetParamsButton = document.getElementById("reset-parameters");
+  resetParamsButton?.addEventListener("click", () => {
+    flock.resetParams();
+    updateSliders()
+  });
+
+  const clearBoidsButton = document.getElementById("clear-boids");
+  clearBoidsButton?.addEventListener("click", () => {
+    flock.clear();
+  });
 })();

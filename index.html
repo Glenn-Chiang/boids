@@ -12,12 +12,12 @@
 <body>
   <main id="app">
     <h1>boids</h1>
-    <p>A simulation of flocking behaviour</p>
+    <p>A simulation of bird-like flocking behaviour</p>
     <div id="canvas-area">
     </div>
-    <div>
-      <h2>Parameters</h2>
-      <div id="dashboard">
+    <h2>Parameters</h2>
+    <div id="dashboard">
+      <div id="parameter-list">
         <div class="parameter">
           <label for="speed">Speed</label>
           <input type="range" id="speed" name="speed" />
@@ -38,7 +38,14 @@
           <label for="cohesion">Cohesion</label>
           <input type="range" id="cohesion" name="cohesion" />
         </div>
-
+      </div>
+      <div id="button-container">
+        <button id="reset-parameters">
+          Reset parameters
+        </button>
+        <button id="clear-boids">
+          Clear boids
+        </button>
       </div>
     </div>
   </main>

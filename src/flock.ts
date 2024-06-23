@@ -57,4 +57,8 @@ export class Flock {
       param.reset();
     }
   }
+
+  clear(): void {
+    this.boids = []
+  }
 }

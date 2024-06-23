@@ -4,6 +4,7 @@
 
 body {
   padding: 2px 8px;
+  padding-bottom: 32px;
 }
 
 canvas {
@@ -13,6 +14,12 @@ canvas {
 }
 
 #dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#parameter-list {
   padding: 8px;
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -32,13 +39,28 @@ canvas {
 }
 
 @media (min-width: 800px) {
-  #dashboard {
+  #parameter-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
-  #dashboard {
+  #parameter-list{
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+#button-container {
+  display: flex;
+  gap: 8px;
+}
+
+#button-container > button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  background-color: #5DADE2;
+  font: inherit
 }
