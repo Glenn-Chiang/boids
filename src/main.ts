@@ -13,7 +13,7 @@ import "./index.css";
   const interactArea = new Rectangle(0, 0, app.canvas.width, app.canvas.height);
   app.stage.hitArea = interactArea;
   app.stage.boundsArea = interactArea;
-  
+
   // Display prompt for user to spawn boids
   const promptText = new Text({
     text: "Click to spawn boids",
@@ -72,8 +72,7 @@ import "./index.css";
     const param = paramMap.param;
     // Slider value should represent the ratio of the parameter's current value relative to its min and max values
     slider.value = (
-      (param.minVal +
-        (param.value - param.minVal) / (param.maxVal - param.minVal)) *
+      ((param.value - param.minVal) / (param.maxVal - param.minVal)) *
       100
     ).toString();
 

@@ -5,7 +5,7 @@ import { Parameter } from "./parameter";
 export class Flock {
   container: Container;
 
-  readonly speed = new Parameter(5, 0, 10); 
+  readonly speed = new Parameter(5, 1, 15); 
   readonly viewRadius = new Parameter(120, 0, 200);
   readonly separationFactor = new Parameter(0.05, 0, 0.1);
   readonly alignmentFactor = new Parameter(0.05, 0, 0.1);
