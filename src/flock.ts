@@ -6,7 +6,7 @@ export class Flock {
   container: Container;
 
   readonly speed = new Parameter(5, 0, 10); 
-  readonly viewRadius = new Parameter(120, 0, 200); // TODO:View field also needs to be updated whenever viewRadius param is updated
+  readonly viewRadius = new Parameter(120, 0, 200);
   readonly separationFactor = new Parameter(0.05, 0, 0.1);
   readonly alignmentFactor = new Parameter(0.05, 0, 0.1);
   readonly cohesionFactor = new Parameter(0.0025, 0, 0.005);
@@ -20,6 +20,7 @@ export class Flock {
   spawnBoid(position: PointData): void {
     const boid = new Boid(position, this)
     this.boids.push(boid);
+    boid.spawn()
   }
 
   update(deltaTime: number): void {

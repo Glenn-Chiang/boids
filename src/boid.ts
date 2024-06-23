@@ -39,16 +39,19 @@ export class Boid {
     this.container.position = startPos;
     this.sprite = Boid.createSprite();
     this.container.addChild(this.sprite);
-    flock.container.addChild(this.container);
-
+    
     this.viewField = new Circle(
       this.container.position.x,
       this.container.position.y,
       this.flock.viewRadius.value
     );
-
+    
     // Set initial velocity with a random direction
     this.velocity = Vector.randomVector(this.speed);
+  }
+  
+  spawn(): void {
+    this.flock.container.addChild(this.container);
   }
 
   // Creates the boid sprite triangle centred in the container

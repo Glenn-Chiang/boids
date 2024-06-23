@@ -1,39 +1,24 @@
-import "./index.css";
-import { Application, Container, Graphics, Rectangle, Text } from "pixi.js";
+import { Application, Rectangle, Text } from "pixi.js";
 import { Flock } from "./flock";
+import "./index.css";
 
 (async () => {
   const app = new Application();
-  await app.init({ background: "white", antialias: true });
+  await app.init({ background: "#5DADE2", antialias: true });
   (document.getElementById("canvas-area") as HTMLDivElement).appendChild(
     app.canvas
   );
 
-  const CONTAINER_WIDTH = 800;
-  const CONTAINER_HEIGHT = 640;
-
-  // Main container in which boids will be spawned
-  const container = new Container();
-  container.boundsArea = new Rectangle(0, 0, CONTAINER_WIDTH, CONTAINER_HEIGHT);
-  app.stage.addChild(container);
-
-  // Background graphic for the container
-  const background = new Graphics()
-    .rect(0, 0, CONTAINER_WIDTH, CONTAINER_HEIGHT)
-    .fill("#5DADE2");
-  container.addChild(background);
-
-  // Add mask to hide boids outside container
-  const mask = new Graphics()
-    .rect(0, 0, CONTAINER_WIDTH, CONTAINER_HEIGHT)
-    .fill("white");
-  container.mask = mask;
-
+  // Set the interactive area to the whole canvas
+  const interactArea = new Rectangle(0, 0, app.canvas.width, app.canvas.height);
+  app.stage.hitArea = interactArea;
+  app.stage.boundsArea = interactArea;
+  
   // Display prompt for user to spawn boids
   const promptText = new Text({
     text: "Click to spawn boids",
     anchor: 0.5,
-    position: { x: CONTAINER_WIDTH / 2, y: CONTAINER_HEIGHT / 2 },
+    position: { x: app.canvas.width / 2, y: app.canvas.height / 2 },
     style: {
       fontSize: 20,
       fontFamily: "consolas",
@@ -41,15 +26,14 @@ import { Flock } from "./flock";
       align: "center",
     },
   });
+  app.stage.addChild(promptText);
 
-  container.addChild(promptText);
-
-  // Manages all boids
-  const flock = new Flock(container);
+  // Flock object manages all boids
+  const flock = new Flock(app.stage);
 
   // User can spawn new boids by clicking anywhere on the container
-  container.eventMode = "static";
-  container.on("pointerdown", (event) => {
+  app.stage.eventMode = "static";
+  app.stage.on("pointerdown", (event) => {
     const clickedPos = event.global;
     flock.spawnBoid(clickedPos);
     promptText.visible = false;
@@ -82,6 +66,7 @@ import { Flock } from "./flock";
     },
   ];
 
+  // Add event listener for each slider to control its corresponding parameter
   for (const paramMap of parameters) {
     const slider = document.getElementById(paramMap.label) as HTMLInputElement;
     const param = paramMap.param;

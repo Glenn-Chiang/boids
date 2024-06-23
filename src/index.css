@@ -6,6 +6,12 @@ body {
   padding: 2px 8px;
 }
 
+canvas {
+  width: 100%;
+  object-fit: contain;
+
+}
+
 #dashboard {
   padding: 8px;
   display: grid;
